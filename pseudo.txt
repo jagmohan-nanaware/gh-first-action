@@ -1,3 +1,4 @@
 Keeping track of commits and push
 
 230116 (commit on wip): created workflow for github action
+230116 (commit on wip): added github action for terraform destroy
