@@ -1,12 +1,30 @@
-name: First Workflow
+name: "terraform-destroy"
 on: workflow_dispatch
 jobs:
-  first-job:
+  terraform:
+    name: "Terraform-Destroy"
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+
     steps:
-      - name: Print greeting
-        run: echo "Hello World!!"
-      - name: Print goodbye
-        run: echo "Goodbye world"
-      - name: Print goodbye again
-        run: echo "Goodbye world again"
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Terraform Init
+        id: init
+        run: |
+          rm -rf .terraform
+          terraform init
+        working-directory: "./cloudwatch-module"
+
+      - name: Terraform Destroy
+        id: destroy
+        run: terraform destroy -auto-approve
+        working-directory: "./cloudwatch-module"
+
